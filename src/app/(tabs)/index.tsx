@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
 import { router } from "expo-router";
+import React, { useRef } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -17,7 +17,7 @@ import PortfolioGallery from "@/components/PortfolioGallery";
 import SectionTitle from "@/components/SectionTitle";
 import SkillList from "@/components/SkillList";
 import { aksen } from "@/constants/accent";
-import rawData from "@/data/data.json"; // Level 5 & 6: sumber data terpisah dari UI
+import rawData from "@/data/data.json";
 import images from "@/data/images";
 import type { PortfolioCardItem, PortfolioData } from "@/data/types";
 
@@ -28,12 +28,13 @@ type TujuanGulir = "portofolio" | "kontak";
 export default function HomeScreen() {
   const { profile, interests, skills, portfolio } = data;
 
-  // Untuk tombol "Lihat Portofolio" dan "Hubungi Saya" (gulir ke bagian terkait)
   const scrollRef = useRef<React.ComponentRef<typeof ScrollView>>(null);
+
   const posisi = useRef<Record<TujuanGulir, number>>({
     portofolio: 0,
     kontak: 0,
   });
+
   const gulirKe = (tujuan: TujuanGulir) => {
     scrollRef.current?.scrollTo({
       y: Math.max(posisi.current[tujuan] - 16, 0),
@@ -41,7 +42,6 @@ export default function HomeScreen() {
     });
   };
 
-  // Ubah kunci gambar (string di JSON) menjadi source gambar lokal
   const portfolioItems: PortfolioCardItem[] = portfolio.map((item) => ({
     ...item,
     gambar: images[item.gambar],
@@ -61,7 +61,7 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Level 1 sampai 3 + Level 5 & 6: data profil dikirim lewat Props */}
+        {/* Profile Header */}
         <HeaderProfile
           nim={profile.nim}
           nama={profile.nama}
@@ -74,40 +74,69 @@ export default function HomeScreen() {
           onHubungi={() => gulirKe("kontak")}
         />
 
-        {/* Level 9: navigasi dari Home menuju halaman Detail dan My Score */}
+        {/* Navigation Cards */}
         <View style={styles.navigationRow}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Buka halaman nilai akademik"
             onPress={() => router.push("/score")}
-            style={({ pressed }) => [styles.navigationButton, pressed && styles.navigationPressed]}
+            style={({ pressed }) => [
+              styles.navigationButton,
+              pressed && styles.navigationPressed,
+            ]}
           >
             <Text style={styles.navigationEyebrow}>ACADEMIC</Text>
             <Text style={styles.navigationButtonTitle}>My Academic Score</Text>
-            <Text style={styles.navigationButtonSubtitle}>Lihat ringkasan nilai</Text>
+            <Text style={styles.navigationButtonSubtitle}>
+              Lihat ringkasan nilai
+            </Text>
           </Pressable>
+
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Buka detail profil"
             onPress={() => router.push("/detail")}
-            style={({ pressed }) => [styles.navigationButton, styles.navigationButtonAlt, pressed && styles.navigationPressed]}
+            style={({ pressed }) => [
+              styles.navigationButton,
+              styles.navigationButtonAlt,
+              pressed && styles.navigationPressed,
+            ]}
           >
-            <Text style={[styles.navigationEyebrow, styles.navigationEyebrowAlt]}>PROFILE</Text>
-            <Text style={[styles.navigationButtonTitle, styles.navigationButtonAltTitle]}>Detail Profil</Text>
-            <Text style={[styles.navigationButtonSubtitle, styles.navigationButtonAltSubtitle]}>Informasi lengkap</Text>
+            <Text
+              style={[styles.navigationEyebrow, styles.navigationEyebrowAlt]}
+            >
+              PROFILE
+            </Text>
+            <Text
+              style={[
+                styles.navigationButtonTitle,
+                styles.navigationButtonAltTitle,
+              ]}
+            >
+              Detail Profil
+            </Text>
+            <Text
+              style={[
+                styles.navigationButtonSubtitle,
+                styles.navigationButtonAltSubtitle,
+              ]}
+            >
+              Informasi lengkap
+            </Text>
           </Pressable>
         </View>
 
-        {/* About Me (teks diambil dari data.json) */}
+        {/* About Me */}
         <View style={styles.section}>
           <SectionTitle nomor="01" judul="About Me" warna={0} />
+
           <View style={styles.aboutCard}>
             <Text style={styles.aboutGreeting}>A little introduction</Text>
             <Text style={styles.aboutText}>{profile.deskripsi}</Text>
           </View>
         </View>
 
-        {/* Level 7: Dynamic Content, daftar minat dirender dengan .map() */}
+        {/* My Interests */}
         <View style={styles.section}>
           <SectionTitle
             nomor="02"
@@ -115,11 +144,11 @@ export default function HomeScreen() {
             deskripsi="Bidang yang ingin saya pelajari dan kembangkan."
             warna={1}
           />
-          {/* flexWrap dan flexBasis membuat grid menyesuaikan lebar layar. */}
 
           <View style={styles.interestGrid}>
             {interests.map((interest, index) => {
               const a = aksen(index + 1);
+
               return (
                 <View key={interest.id} style={styles.interestCard}>
                   <View
@@ -127,7 +156,9 @@ export default function HomeScreen() {
                   >
                     <Text style={styles.interestEmoji}>{interest.ikon}</Text>
                   </View>
+
                   <Text style={styles.interestTitle}>{interest.judul}</Text>
+
                   <Text style={styles.interestDescription}>
                     {interest.deskripsi}
                   </Text>
@@ -137,17 +168,17 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Level 7: Dynamic Content, skills dengan .map() */}
+        {/* Dynamic Skills */}
         <SkillList skills={skills} />
 
-        {/* Level 7: Dynamic Content, galeri portofolio dengan FlatList */}
+        {/* Portfolio */}
         <View
           onLayout={(e) => (posisi.current.portofolio = e.nativeEvent.layout.y)}
         >
           <PortfolioGallery items={portfolioItems} />
         </View>
 
-        {/* Level 4: Form kontak interaktif */}
+        {/* Contact Form */}
         <View
           onLayout={(e) => (posisi.current.kontak = e.nativeEvent.layout.y)}
         >
@@ -167,10 +198,13 @@ export default function HomeScreen() {
               style={[styles.footerBar, { backgroundColor: aksen(2).main }]}
             />
           </View>
+
           <Text style={styles.footerTitle}>{profile.nama.toUpperCase()}</Text>
+
           <Text style={styles.footerSubtitle}>
             Personal CV & Academic Score App
           </Text>
+
           <Text style={styles.footerCopyright}>UTS MOB2 • 20261</Text>
         </View>
       </ScrollView>
@@ -179,19 +213,31 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#F5F7FF" },
-  container: { flex: 1 },
-  // Responsif: di HP memenuhi layar, di laptop dibatasi lebar 720 dan berada di tengah
+  screen: {
+    flex: 1,
+    backgroundColor: "#F5F7FF",
+  },
+
+  container: {
+    flex: 1,
+  },
+
   content: {
     paddingHorizontal: 22,
-    paddingTop: 30,
-    paddingBottom: 35,
+    paddingTop: 92,
+    paddingBottom: 48,
     width: "100%",
     maxWidth: 720,
     alignSelf: "center",
   },
 
-  navigationRow: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 16 },
+  navigationRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 16,
+  },
+
   navigationButton: {
     flexGrow: 1,
     flexBasis: 220,
@@ -199,16 +245,53 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 17,
   },
-  navigationButtonAlt: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE3F2" },
-  navigationButtonAltTitle: { color: "#172554" },
-  navigationButtonAltSubtitle: { color: "#64748B" },
-  navigationPressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
-  navigationEyebrow: { color: "#A5B4FC", fontSize: 9, fontWeight: "900", letterSpacing: 1.2, marginBottom: 7 },
-  navigationEyebrowAlt: { color: "#4F46E5" },
-  navigationButtonTitle: { color: "#FFFFFF", fontSize: 15, fontWeight: "900" },
-  navigationButtonSubtitle: { color: "#DCE4FF", fontSize: 11, marginTop: 5 },
 
-  section: { marginTop: 36 },
+  navigationButtonAlt: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#DCE3F2",
+  },
+
+  navigationButtonAltTitle: {
+    color: "#172554",
+  },
+
+  navigationButtonAltSubtitle: {
+    color: "#64748B",
+  },
+
+  navigationPressed: {
+    opacity: 0.78,
+    transform: [{ scale: 0.99 }],
+  },
+
+  navigationEyebrow: {
+    color: "#A5B4FC",
+    fontSize: 9,
+    fontWeight: "900",
+    letterSpacing: 1.2,
+    marginBottom: 7,
+  },
+
+  navigationEyebrowAlt: {
+    color: "#4F46E5",
+  },
+
+  navigationButtonTitle: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "900",
+  },
+
+  navigationButtonSubtitle: {
+    color: "#DCE4FF",
+    fontSize: 11,
+    marginTop: 5,
+  },
+
+  section: {
+    marginTop: 36,
+  },
 
   aboutCard: {
     backgroundColor: "#FFFFFF",
@@ -218,6 +301,7 @@ const styles = StyleSheet.create({
     borderColor: "#E8ECF5",
     alignItems: "center",
   },
+
   aboutGreeting: {
     fontSize: 13,
     fontWeight: "800",
@@ -225,6 +309,7 @@ const styles = StyleSheet.create({
     marginBottom: 11,
     textAlign: "center",
   },
+
   aboutText: {
     fontSize: 14,
     lineHeight: 24,
@@ -232,7 +317,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  interestGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
+  interestGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
 
   interestCard: {
     flexGrow: 1,
@@ -244,6 +333,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8ECF5",
   },
+
   interestIcon: {
     width: 52,
     height: 52,
@@ -252,7 +342,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 12,
   },
-  interestEmoji: { fontSize: 24 },
+
+  interestEmoji: {
+    fontSize: 24,
+  },
+
   interestTitle: {
     fontSize: 15,
     fontWeight: "800",
@@ -260,6 +354,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textAlign: "center",
   },
+
   interestDescription: {
     fontSize: 12,
     lineHeight: 20,
@@ -267,9 +362,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  footer: { alignItems: "center", marginTop: 40 },
-  footerBars: { flexDirection: "row", gap: 6, marginBottom: 18 },
-  footerBar: { width: 24, height: 4, borderRadius: 2 },
+  footer: {
+    alignItems: "center",
+    marginTop: 40,
+  },
+
+  footerBars: {
+    flexDirection: "row",
+    gap: 6,
+    marginBottom: 18,
+  },
+
+  footerBar: {
+    width: 24,
+    height: 4,
+    borderRadius: 2,
+  },
+
   footerTitle: {
     fontSize: 12,
     fontWeight: "900",
@@ -277,11 +386,17 @@ const styles = StyleSheet.create({
     color: "#172554",
     textAlign: "center",
   },
+
   footerSubtitle: {
     fontSize: 11,
     color: "#64748B",
     marginTop: 7,
     textAlign: "center",
   },
-  footerCopyright: { fontSize: 10, color: "#94A3B8", marginTop: 8 },
+
+  footerCopyright: {
+    fontSize: 10,
+    color: "#94A3B8",
+    marginTop: 8,
+  },
 });
