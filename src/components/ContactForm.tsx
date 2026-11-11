@@ -1,134 +1,250 @@
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  View,
+  Keyboard,
+  Pressable,
+  StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
+  View,
 } from "react-native";
-import SectionTitle from "./SectionTitle";
-import { aksen } from "../constants/accent";
 
-// Memenuhi Level 4: State (useState), Event Handling (onChangeText, onPress), Validasi, Alert
 export default function ContactForm() {
-  // Level 4: State untuk tiap field
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [pesan, setPesan] = useState("");
 
+  const [errors, setErrors] = useState({
+    nama: "",
+    email: "",
+    pesan: "",
+  });
+
+  const [feedback, setFeedback] = useState("");
+
+  const isComplete = useMemo(
+    () => nama.trim() !== "" && email.trim() !== "" && pesan.trim() !== "",
+    [nama, email, pesan],
+  );
+
+  const validate = () => {
+    const newErrors = {
+      nama: "",
+      email: "",
+      pesan: "",
+    };
+
+    if (!nama.trim()) {
+      newErrors.nama = "Nama wajib diisi.";
+    } else if (nama.trim().length < 2) {
+      newErrors.nama = "Nama minimal 2 karakter.";
+    }
+
+    if (!email.trim()) {
+      newErrors.email = "Email wajib diisi.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      newErrors.email = "Format email tidak valid.";
+    }
+
+    if (!pesan.trim()) {
+      newErrors.pesan = "Pesan wajib diisi.";
+    } else if (pesan.trim().length < 10) {
+      newErrors.pesan = "Pesan minimal 10 karakter.";
+    }
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(Boolean);
+  };
+
   const handleSubmit = () => {
-    // Level 4: Validasi input tidak boleh kosong
-    if (!nama.trim() || !email.trim() || !pesan.trim()) {
-      Alert.alert("Form belum lengkap", "Nama, Email, dan Pesan wajib diisi.");
+    setFeedback("");
+
+    if (!validate()) {
+      setFeedback("Periksa kembali data yang kamu masukkan.");
       return;
     }
 
-    // Tambahan di luar syarat soal: validasi format email dasar
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    if (!emailValid) {
-      Alert.alert("Email tidak valid", "Masukkan alamat email yang benar.");
-      return;
-    }
-
-    // Level 4: Alert saat form berhasil disubmit
-    Alert.alert(
-      "Pesan terkirim",
-      `Terima kasih, ${nama.trim()}! Pesan Anda sudah diterima.`
+    Keyboard.dismiss();
+    setFeedback(
+      "Pesan berhasil divalidasi. Terima kasih telah menghubungi saya!",
     );
 
-    // Kosongkan form setelah submit
     setNama("");
     setEmail("");
     setPesan("");
+    setErrors({ nama: "", email: "", pesan: "" });
   };
 
+  const renderError = (message: string) =>
+    message ? <Text style={styles.errorText}>{message}</Text> : null;
+
   return (
-    <View style={styles.section}>
-      <SectionTitle
-        nomor="05"
-        judul="Contact Me"
-        deskripsi="Kirim pesan melalui form di bawah ini."
-        warna={4}
+    <View style={styles.container}>
+      <Text style={styles.heading}>Hubungi Saya</Text>
+      <Text style={styles.subtitle}>
+        Silakan isi formulir berikut untuk mengirimkan pesan.
+      </Text>
+
+      <Text style={styles.label}>Nama</Text>
+      <TextInput
+        style={[styles.input, errors.nama ? styles.inputError : null]}
+        placeholder="Masukkan nama lengkap"
+        value={nama}
+        onChangeText={(value) => {
+          setNama(value);
+          setErrors((prev) => ({ ...prev, nama: "" }));
+          setFeedback("");
+        }}
       />
-      <View style={styles.card}>
-        <Text style={styles.label}>NAMA</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nama lengkap"
-          placeholderTextColor="#94A3B8"
-          value={nama}
-          onChangeText={setNama}
-        />
+      {renderError(errors.nama)}
 
-        <Text style={styles.label}>EMAIL</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="nama@email.com"
-          placeholderTextColor="#94A3B8"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+      <Text style={styles.label}>Email</Text>
+      <TextInput
+        style={[styles.input, errors.email ? styles.inputError : null]}
+        placeholder="nama@email.com"
+        value={email}
+        onChangeText={(value) => {
+          setEmail(value);
+          setErrors((prev) => ({ ...prev, email: "" }));
+          setFeedback("");
+        }}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      {renderError(errors.email)}
 
-        <Text style={styles.label}>PESAN</Text>
-        <TextInput
-          style={[styles.input, styles.inputPesan]}
-          placeholder="Tulis pesan Anda"
-          placeholderTextColor="#94A3B8"
-          value={pesan}
-          onChangeText={setPesan}
-          multiline
-          numberOfLines={4}
-          textAlignVertical="top"
-        />
+      <Text style={styles.label}>Pesan</Text>
+      <TextInput
+        style={[
+          styles.input,
+          styles.messageInput,
+          errors.pesan ? styles.inputError : null,
+        ]}
+        placeholder="Tuliskan pesan minimal 10 karakter..."
+        value={pesan}
+        onChangeText={(value) => {
+          setPesan(value.slice(0, 500));
+          setErrors((prev) => ({ ...prev, pesan: "" }));
+          setFeedback("");
+        }}
+        multiline
+        textAlignVertical="top"
+      />
+      <Text style={styles.counter}>{pesan.length}/500 karakter</Text>
+      {renderError(errors.pesan)}
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: aksen(4).main }]}
-          onPress={handleSubmit} activeOpacity={0.85}>
-          <Text style={styles.buttonText}>Kirim Pesan</Text>
-        </TouchableOpacity>
-      </View>
+      <Pressable
+        style={[styles.button, !isComplete ? styles.buttonInactive : null]}
+        onPress={handleSubmit}
+      >
+        <Text style={styles.buttonText}>Kirim Pesan</Text>
+      </Pressable>
+
+      {feedback ? (
+        <Text
+          style={[
+            styles.feedback,
+            feedback.startsWith("Pesan berhasil")
+              ? styles.success
+              : styles.failure,
+          ]}
+          accessibilityRole="alert"
+        >
+          {feedback}
+        </Text>
+      ) : null}
+
+      <Text style={styles.note}></Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: 36 },
-  card: {
+  container: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 20,
     padding: 20,
+    borderRadius: 16,
+    marginVertical: 16,
     borderWidth: 1,
-    borderColor: "#E8ECF5",
+    borderColor: "#E5E7EB",
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1F2937",
+    marginBottom: 6,
+  },
+  subtitle: {
+    color: "#6B7280",
+    marginBottom: 20,
+    lineHeight: 21,
   },
   label: {
-    fontSize: 10,
-    fontWeight: "800",
-    color: "#94A3B8",
-    letterSpacing: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
     marginBottom: 7,
+    marginTop: 12,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#E8ECF5",
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 11,
+    borderColor: "#D1D5DB",
+    borderRadius: 9,
+    padding: 12,
     fontSize: 14,
-    color: "#172554",
-    backgroundColor: "#F5F7FF",
-    marginBottom: 16,
+    color: "#111827",
+    backgroundColor: "#FFFFFF",
   },
-  inputPesan: { height: 110 },
+  inputError: {
+    borderColor: "#DC2626",
+  },
+  messageInput: {
+    minHeight: 120,
+  },
+  errorText: {
+    color: "#DC2626",
+    fontSize: 12,
+    marginTop: 5,
+  },
+  counter: {
+    color: "#6B7280",
+    fontSize: 11,
+    textAlign: "right",
+    marginTop: 5,
+  },
   button: {
-    backgroundColor: "#4F46E5",
-    paddingVertical: 15,
-    borderRadius: 14,
+    backgroundColor: "#2563EB",
+    padding: 14,
+    borderRadius: 9,
     alignItems: "center",
-    marginTop: 4,
+    marginTop: 20,
   },
-  buttonText: { color: "#FFFFFF", fontSize: 14, fontWeight: "800" },
+  buttonInactive: {
+    backgroundColor: "#64748B",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  feedback: {
+    marginTop: 14,
+    padding: 12,
+    borderRadius: 8,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  success: {
+    color: "#166534",
+    backgroundColor: "#DCFCE7",
+  },
+  failure: {
+    color: "#991B1B",
+    backgroundColor: "#FEE2E2",
+  },
+  note: {
+    fontSize: 11,
+    color: "#6B7280",
+    marginTop: 16,
+    lineHeight: 17,
+  },
 });

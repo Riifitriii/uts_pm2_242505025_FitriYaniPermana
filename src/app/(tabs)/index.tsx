@@ -1,7 +1,9 @@
 import React, { useRef } from "react";
+import { router } from "expo-router";
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -9,15 +11,15 @@ import {
   View,
 } from "react-native";
 
-import ContactForm from "../components/ContactForm";
-import HeaderProfile from "../components/HeaderProfile";
-import PortfolioGallery from "../components/PortfolioGallery";
-import SectionTitle from "../components/SectionTitle";
-import SkillList from "../components/SkillList";
-import { aksen } from "../constants/accent";
-import rawData from "../data/data.json"; // Level 5 & 6: sumber data terpisah dari UI
-import images from "../data/images";
-import type { PortfolioCardItem, PortfolioData } from "../data/types";
+import ContactForm from "@/components/ContactForm";
+import HeaderProfile from "@/components/HeaderProfile";
+import PortfolioGallery from "@/components/PortfolioGallery";
+import SectionTitle from "@/components/SectionTitle";
+import SkillList from "@/components/SkillList";
+import { aksen } from "@/constants/accent";
+import rawData from "@/data/data.json"; // Level 5 & 6: sumber data terpisah dari UI
+import images from "@/data/images";
+import type { PortfolioCardItem, PortfolioData } from "@/data/types";
 
 const data: PortfolioData = rawData;
 
@@ -72,6 +74,30 @@ export default function HomeScreen() {
           onHubungi={() => gulirKe("kontak")}
         />
 
+        {/* Level 9: navigasi dari Home menuju halaman Detail dan My Score */}
+        <View style={styles.navigationRow}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Buka halaman nilai akademik"
+            onPress={() => router.push("/score")}
+            style={({ pressed }) => [styles.navigationButton, pressed && styles.navigationPressed]}
+          >
+            <Text style={styles.navigationEyebrow}>ACADEMIC</Text>
+            <Text style={styles.navigationButtonTitle}>My Academic Score</Text>
+            <Text style={styles.navigationButtonSubtitle}>Lihat ringkasan nilai</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Buka detail profil"
+            onPress={() => router.push("/detail")}
+            style={({ pressed }) => [styles.navigationButton, styles.navigationButtonAlt, pressed && styles.navigationPressed]}
+          >
+            <Text style={[styles.navigationEyebrow, styles.navigationEyebrowAlt]}>PROFILE</Text>
+            <Text style={[styles.navigationButtonTitle, styles.navigationButtonAltTitle]}>Detail Profil</Text>
+            <Text style={[styles.navigationButtonSubtitle, styles.navigationButtonAltSubtitle]}>Informasi lengkap</Text>
+          </Pressable>
+        </View>
+
         {/* About Me (teks diambil dari data.json) */}
         <View style={styles.section}>
           <SectionTitle nomor="01" judul="About Me" warna={0} />
@@ -89,8 +115,7 @@ export default function HomeScreen() {
             deskripsi="Bidang yang ingin saya pelajari dan kembangkan."
             warna={1}
           />
-          {/* flexWrap 
-+                    flexBasis: 1 kolom di HP, 3 kolom di layar lebar */}
+          {/* flexWrap dan flexBasis membuat grid menyesuaikan lebar layar. */}
 
           <View style={styles.interestGrid}>
             {interests.map((interest, index) => {
@@ -165,6 +190,23 @@ const styles = StyleSheet.create({
     maxWidth: 720,
     alignSelf: "center",
   },
+
+  navigationRow: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 16 },
+  navigationButton: {
+    flexGrow: 1,
+    flexBasis: 220,
+    backgroundColor: "#172554",
+    borderRadius: 18,
+    padding: 17,
+  },
+  navigationButtonAlt: { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#DCE3F2" },
+  navigationButtonAltTitle: { color: "#172554" },
+  navigationButtonAltSubtitle: { color: "#64748B" },
+  navigationPressed: { opacity: 0.78, transform: [{ scale: 0.99 }] },
+  navigationEyebrow: { color: "#A5B4FC", fontSize: 9, fontWeight: "900", letterSpacing: 1.2, marginBottom: 7 },
+  navigationEyebrowAlt: { color: "#4F46E5" },
+  navigationButtonTitle: { color: "#FFFFFF", fontSize: 15, fontWeight: "900" },
+  navigationButtonSubtitle: { color: "#DCE4FF", fontSize: 11, marginTop: 5 },
 
   section: { marginTop: 36 },
 

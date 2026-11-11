@@ -1,52 +1,82 @@
-# UTS MOB2 20261 - Personal CV & Academic Score App
+# UTS MOB2 20261 — Personal CV & Academic Score App
 
 **Nama:** Fitri Yani Permana  
 **NIM:** 242505025  
 **Program Studi:** Sistem Informasi  
-**Semester:** 5
+**Semester:** 5  
+**Mata Kuliah:** Pemrograman Mobile 2
 
-## Deskripsi Project
+## Deskripsi
 
-Aplikasi Personal CV & Academic Score App merupakan aplikasi mobile berbasis React Native menggunakan Expo yang dikembangkan untuk memenuhi tugas Ujian Tengah Semester (UTS) mata kuliah Mobile Programming 2.
+Aplikasi Personal CV & Academic Score App dibuat menggunakan React Native, Expo SDK 58, TypeScript, dan Expo Router. Aplikasi menampilkan profil pribadi, minat, skill, portofolio, formulir kontak, detail profil, dan dashboard nilai akademik.
 
-## Progress Pengerjaan
+## Struktur fitur
 
-- [x] Level 1
-- [x] Level 2
-- [ ] Level 3
-- [ ] Level 4
-- [ ] Level 5
-- [ ] Level 6
-- [ ] Level 7
-- [ ] Level 8
-- [ ] Level 9
-- [ ] Level 10
+- **Level 1–3:** profil pribadi, foto, deskripsi, dan layout responsif.
+- **Level 4:** form kontak dengan State, event handling, dan validasi.
+- **Level 5–6:** pemisahan komponen dan data JSON.
+- **Level 7:** konten dinamis dari array JSON dan galeri portofolio.
+- **Level 8:** dashboard nilai akademik dari `src/data/academic.json`.
+- **Level 9:** navigasi tab dan stack menggunakan Expo Router.
+- **Level 10:** fallback halaman 404, accessibility labels, empty state, komponen terpisah, dan checklist pengujian.
 
----
+## Menjalankan project
 
-# Welcome to your Expo app 👋
+1. Buka CMD di folder project.
+2. Instal dependency jika baru clone:
 
-This is an [Expo](https://expo.dev) project created with [create-expo-app](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies:
-
-   ```bash
+   ```cmd
    npm install
    ```
 
-2. Start the app:
+3. Jalankan Expo:
 
-   ```bash
+   ```cmd
    npx expo start
    ```
 
-You can start developing by editing the files inside the `src/app` directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+4. Scan QR menggunakan Expo Go atau tekan `w` untuk web.
 
-## Learn more
+## Mengisi data nilai
 
-- [Expo documentation](https://docs.expo.dev/)
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/)
-- [Expo on GitHub](https://github.com/expo/expo)
-- [Discord community](https://chat.expo.dev)
+Buka `src/data/academic.json`, kemudian isi nilai sesuai data akademik yang benar:
+
+- `dosen`
+- `nilaiAkhir`
+- `grade`
+- `lp`
+- nilai pada setiap item di `komponen`
+
+Nilai awal sengaja dikosongkan (`null`) agar aplikasi tidak menampilkan nilai akademik yang belum diverifikasi.
+
+## Struktur navigasi
+
+```text
+src/app/
+├── _layout.tsx          # Root Stack Navigator
+├── +not-found.tsx       # Fallback route
+├── detail.tsx           # Detail Profil
+├── score.tsx             # My Academic Score
+└── (tabs)/
+    ├── _layout.tsx       # Native bottom tabs
+    ├── index.tsx         # Home / Personal CV
+    └── explore.tsx       # Navigation hub
+```
+
+## Checklist pengujian manual
+
+- [ ] Home tampil tanpa error.
+- [ ] Foto profil dan data JSON tampil benar.
+- [ ] Tombol My Academic Score membuka halaman Score.
+- [ ] Tombol Detail Profil membuka halaman Detail.
+- [ ] Tombol kembali bekerja.
+- [ ] Tab Home dan Explore dapat berpindah.
+- [ ] Dashboard nilai menampilkan placeholder jika data belum diisi.
+- [ ] Setelah `academic.json` diisi, nilai dan progress tampil sesuai data.
+- [ ] Form kontak menolak input kosong dan email tidak valid.
+- [ ] URL tidak dikenal menampilkan halaman 404.
+- [ ] Tampilan diperiksa pada Android/Expo Go dan web.
+
+## Catatan
+
+Project menggunakan Expo Router sebagai sistem routing. Jangan menambahkan `NavigationContainer` secara manual. `@react-navigation/native` dan `@react-navigation/native-stack` telah terpasang sebagai dependency, sedangkan route dan navigator aplikasi dikelola melalui Expo Router.

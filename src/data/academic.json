@@ -1,0 +1,31 @@
+{
+  "semester": "5",
+  "programStudi": "Sistem Informasi",
+  "mataKuliah": "Pemrograman Mobile 2",
+  "dosen": "Iin Solihin M.Kom.",
+  "nilaiAkhir": 89,
+  "grade": "A",
+  "lp": 12375,
+  "komponen": [
+    {
+      "id": "attendance",
+      "label": "Attendance",
+      "nilai": 100
+    },
+    {
+      "id": "practice",
+      "label": "Practice",
+      "nilai": 87
+    },
+    {
+      "id": "quest",
+      "label": "Quest",
+      "nilai": 95
+    },
+    {
+      "id": "challenge",
+      "label": "Challenge",
+      "nilai": 100
+    }
+  ]
+}
