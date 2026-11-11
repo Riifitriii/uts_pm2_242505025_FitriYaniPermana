@@ -1,0 +1,63 @@
+{
+  "profile": {
+    "nim": "242505025",
+    "nama": "Fitri Yani Permana",
+    "profesi": "Mahasiswa IT / React Native Developer",
+    "status": "Mahasiswa Sistem Informasi",
+    "proyek": "Personal CV & Academic Score",
+    "tagline": "Get to know me, my interests, and my journey in Information Systems.",
+    "foto": "profile",
+    "deskripsi": "Saya Fitri Yani Permana, mahasiswa Program Studi Sistem Informasi yang tertarik pada perkembangan teknologi digital dan pengembangan aplikasi. Saya senang mempelajari hal baru, mengembangkan keterampilan, serta memahami bagaimana teknologi dapat membantu menyelesaikan berbagai permasalahan."
+  },
+  "interests": [
+    {
+      "id": "i1",
+      "ikon": "📱",
+      "judul": "Mobile Development",
+      "deskripsi": "Mempelajari pengembangan aplikasi mobile menggunakan React Native dan Expo."
+    },
+    {
+      "id": "i2",
+      "ikon": "💻",
+      "judul": "Web Development",
+      "deskripsi": "Mengenal pengembangan aplikasi berbasis web dan teknologi pendukungnya."
+    },
+    {
+      "id": "i3",
+      "ikon": "🎨",
+      "judul": "UI/UX Design",
+      "deskripsi": "Memahami desain antarmuka yang menarik, konsisten, dan mudah digunakan."
+    }
+  ],
+  "skills": [
+    { "id": "s1", "nama": "React Native", "kategori": "Mobile", "level": 80 },
+    { "id": "s2", "nama": "JavaScript", "kategori": "Bahasa", "level": 75 },
+    { "id": "s3", "nama": "HTML & CSS", "kategori": "Web", "level": 80 },
+    { "id": "s4", "nama": "Basis Data (SQL)", "kategori": "Data", "level": 70 },
+    { "id": "s5", "nama": "UI Design", "kategori": "Desain", "level": 65 },
+    { "id": "s6", "nama": "Git & GitHub", "kategori": "Tools", "level": 70 }
+  ],
+  "portfolio": [
+    {
+      "id": "p1",
+      "judul": "SIPANDA",
+      "deskripsi": "Sistem informasi pengajuan dan pendataan UMKM berbasis web.",
+      "teknologi": ["Web", "Database"],
+      "gambar": "project1"
+    },
+    {
+      "id": "p2",
+      "judul": "RIIFITRIII STORE",
+      "deskripsi": "E-commerce berbasis web untuk penjualan produk fashion.",
+      "teknologi": ["Sistem Informasi"],
+      "gambar": "project2"
+    },
+    {
+      "id": "p3",
+      "judul": "Personal CV App",
+      "deskripsi": "Aplikasi CV dan nilai akademik dengan React Native dan Expo.",
+      "teknologi": ["React Native", "Expo"],
+      "gambar": "project3"
+    }
+  ]
+}
