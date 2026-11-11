@@ -1,8 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import SectionTitle from "./SectionTitle";
+import { StyleSheet, Text, View } from "react-native";
 import { aksen } from "../constants/accent";
 import type { Skill } from "../data/types";
+import SectionTitle from "./SectionTitle";
 
 type Props = {
   skills: Skill[];
@@ -28,13 +27,18 @@ export default function SkillList({ skills }: Props) {
               <View style={styles.row}>
                 <Text style={styles.nama}>{skill.nama}</Text>
                 <View style={[styles.levelBadge, { backgroundColor: a.soft }]}>
-                  <Text style={[styles.level, { color: a.teks }]}>{skill.level}%</Text>
+                  <Text style={[styles.level, { color: a.teks }]}>
+                    {skill.level}%
+                  </Text>
                 </View>
               </View>
               <Text style={styles.kategori}>{skill.kategori}</Text>
               <View style={styles.barBackground}>
                 <View
-                  style={[styles.barFill, { width: `${skill.level}%`, backgroundColor: a.main }]}
+                  style={[
+                    styles.barFill,
+                    { width: `${skill.level}%`, backgroundColor: a.main },
+                  ]}
                 />
               </View>
             </View>
@@ -59,11 +63,20 @@ const styles = StyleSheet.create({
     borderColor: "#E8ECF5",
   },
   item: { flexGrow: 1, flexBasis: 240 },
-  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   nama: { fontSize: 14, fontWeight: "800", color: "#172554" },
   levelBadge: { paddingHorizontal: 9, paddingVertical: 3, borderRadius: 999 },
   level: { fontSize: 11, fontWeight: "800" },
   kategori: { fontSize: 11, color: "#94A3B8", marginTop: 3, marginBottom: 8 },
-  barBackground: { height: 8, backgroundColor: "#F1F5F9", borderRadius: 4, overflow: "hidden" },
+  barBackground: {
+    height: 8,
+    backgroundColor: "#F1F5F9",
+    borderRadius: 4,
+    overflow: "hidden",
+  },
   barFill: { height: 8, borderRadius: 4 },
 });

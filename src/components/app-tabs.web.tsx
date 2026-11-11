@@ -38,12 +38,9 @@ export default function AppTabs() {
 }
 
 function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
-  const { ref, ...pressableProps } = props;
-  void ref;
-
   return (
     <Pressable
-      {...pressableProps}
+      {...props}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
       style={({ pressed }) => [
